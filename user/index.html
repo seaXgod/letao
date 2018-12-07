@@ -61,6 +61,11 @@
         type: 'get',
         success: function (info) {
             console.log(info);
+            // location.href= '/user/login.html';
+            if(info.error){
+                location.href= '../index.html'
+            }
+            console.log('111')
         }
     })
 </script>

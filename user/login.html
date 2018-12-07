@@ -52,7 +52,7 @@
        var data = $(this).serialize();
        
         $.ajax({
-            url: 'http://localhost:3000/user/login',
+            url: '/api/user/login',
             type: 'post',
             data: data,
             success: function (info) {

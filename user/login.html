@@ -48,6 +48,23 @@
 	<script src="../js/jquery.min.js"></script>
 	<script src="../res/mui/js/mui.min.js"></script>
 	<script>
+		//登陆优化
+		//检测登陆时地址后是否带有address出现错误，发过来的地址
+		// console.log(location.search);
+		var search = location.search.slice(1);
+		// console.log(search)
+		//通过正则获取url后面的地址
+		var ym = /url=(.+)/;
+
+		//当匹配不到结果 match 为 null
+		var match = ym.exec(search);
+		// console.log(match);
+
+		var url = match && match[1];
+		url = url || '/';
+		
+
+
 		//登陆功能
 		//1、获取用户输入账号密码  事件监听
 		$('form').on('submit', function () {

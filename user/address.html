@@ -69,7 +69,11 @@
 				console.log(info);
 				//现在返回的是一个数组，实际要的是对象，所以在下面进行要转一下
 				//调用模板引擎
-
+				//登陆优化，如果出现错误，跳转到地址页
+				if (info.error) {
+					alert('请重新登陆');
+					return location.href= '/user/login.html?url='+ location.href;
+				}
 				var str = template('tpl', {list: info});
 				$('.mbyq').html(str);
 			}

@@ -12,6 +12,11 @@
     <link rel="stylesheet" href="res/fontAwesome/css/font-awesome.min.css"/>
     <link rel="stylesheet" href="css/common.css"/>
     <link rel="stylesheet" href="css/cate.css"/>
+    <style>
+        .now {
+            background-color: gray;
+        }
+    </style>
 </head>
 <body>
 <div class="cz_layout">
@@ -21,14 +26,8 @@
         <a href="search.html" class="icon_search fa fa-search"></a>
     </header>
     <div class="cz_container">
-        <div class="cate_slide">
-            <ul>
-                <li class="now">运动馆</li>
-                <li>女士馆</li>
-                <li>男士馆</li>
-                <li>帆布馆</li>
-                <li>户外馆</li>
-            </ul>
+        <div class="cate_slide" id="pro_cate">
+            
         </div>
         <div class="cate_content">
             <div class="mui-scroll-wrapper">
@@ -46,15 +45,8 @@
                         <li><a href="#"><img src="images/brand1.png" alt=""/><p>耐克</p></a></li>
                     </ul>
                     <span class="title">运动休闲</span>
-                    <ul class="mui-clearfix">
-                        <li><a href="#"><img src="images/brand1.png" alt=""/><p>耐克</p></a></li>
-                        <li><a href="#"><img src="images/brand2.png" alt=""/><p>耐克</p></a></li>
-                        <li><a href="#"><img src="images/brand3.png" alt=""/><p>耐克</p></a></li>
-                        <li><a href="#"><img src="images/brand4.png" alt=""/><p>耐克</p></a></li>
-                        <li><a href="#"><img src="images/brand5.png" alt=""/><p>耐克</p></a></li>
-                        <li><a href="#"><img src="images/brand6.png" alt=""/><p>耐克</p></a></li>
-                        <li><a href="#"><img src="images/brand7.png" alt=""/><p>耐克</p></a></li>
-                        <li><a href="#"><img src="images/brand8.png" alt=""/><p>耐克</p></a></li>
+                    <ul class="mui-clearfix" id="pro_lis">
+                        
                     </ul>
                 </div>
             </div>
@@ -67,18 +59,72 @@
         <a class="tab_user fa fa-user" href="user/index.html"><span>会员中心</span></a>
     </footer>
 </div>
-<script src="res/mui/js/mui.min.js"></script>
+<script type="text/html" id="tpl">
+    <ul>
+        {{each rows val}}
+        <li data-id = "{{val.id}}">{{val.categoryName}}</li>
+        {{/each}}
+    </ul>
+</script>
+<script type="text/html" id="pto">
+    {{each rows val}}
+    <li><a href="#"><img src="{{val.brandLogo}}" alt=""/><p>{{val.brandName}}</p></a></li>
+    {{/each}}
+</script>
+<script src="/js/jquery.min.js"></script>
+<script src="/js/template-web.js"></script>
+<script src="/res/mui/js/mui.min.js"></script>
 <script>
+    //发送请求
+    $.ajax({
+        url: '/api/category/queryTopCategory',
+        type: 'get',
+        success: function (info) {
+            console.log(info)
+            //调用模板
+            var html = template('tpl',info);
+            $('#pro_cate').html(html);
+        }
+    })
+
+    //注册点击事件 事件委托
+    $('#pro_cate').on('click','li',function () {
+        $(this).addClass('now').siblings().removeClass('now');
+
+        //获取顶级id
+        var id = $(this).attr('data-id')
+        //二级分类查询
+        $.ajax({
+            url: '/api/category/querySecondCategory',
+            type: 'get',
+            data: {id: id},
+            success: function (info) {
+                // console.log(info)
+                var html = template('pto',info);
+                $('#pro_lis').html(html);
+            }
+        })
+    })
+
+   
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     mui(function(){
-        mui('.mui-scroll-wrapper').scroll({
-            scrollY: true, //是否竖向滚动
-            scrollX: false, //是否横向滚动
-            startX: 0, //初始化时滚动至x
-            startY: 0, //初始化时滚动至y
-            indicators: false, //是否显示滚动条
-            deceleration:0.0006, //阻尼系数,系数越小滑动越灵敏
-            bounce: true, //是否启用回弹
-        });
+        mui('.mui-scroll-wrapper').scroll();
     });
 </script>
 </body>

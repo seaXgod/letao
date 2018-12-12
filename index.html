@@ -115,7 +115,7 @@
 </div>
 <script type="text/html" id="tpl">
     {{each data val}}
-    <a href="/product.html" class="cz_product">
+    <a href="/product.html?id={{val.id}}" class="cz_product">
         <div class="box">
             <img src="{{val.pic[0].picAddr}}" alt=""/>
             <p class="name">{{val.proName}}</p>

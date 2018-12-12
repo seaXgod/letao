@@ -21,83 +21,8 @@
         <a href="javascript:;" class="icon_refresh fa fa-refresh"></a>
     </header>
     <div class="cz_container mui-scroll-wrapper">
-        <ul class="mui-table-view mui-scroll">
-            <li data-product="" class="mui-table-view-cell">
-                <div class="mui-slider-right mui-disabled">
-                    <a class="mui-btn mui-btn-blue">编辑</a>
-                    <a class="mui-btn mui-btn-red">删除</a>
-                </div>
-                <a href="javascript:;" class="mui-navigate-right mui-slider-handle">
-                    <img class="mui-media-object mui-pull-left" src="images/product.jpg">
-                    <div class="mui-media-body">
-                        <p class="name">热风2016年冬季新款男鞋高帮休闲皮鞋舒适韩版平底鞋H13M6315</p>
-                        <p class="info">
-                            <span class="price">&yen;100.00</span>
-                            <span class="oldPrice">&yen;299.90</span>
-                            <span class="number">x1</span>
-                        </p>
-                        <p><span class="size">鞋码：42</span></p>
-                    </div>
-                    <input type="checkbox"/>
-                </a>
-            </li>
-            <li data-product="" class="mui-table-view-cell">
-                <div class="mui-slider-right mui-disabled">
-                    <a class="mui-btn mui-btn-blue">编辑</a>
-                    <a class="mui-btn mui-btn-red">删除</a>
-                </div>
-                <a href="javascript:;" class="mui-navigate-right mui-slider-handle">
-                    <img class="mui-media-object mui-pull-left" src="images/product.jpg">
-                    <div class="mui-media-body">
-                        <p class="name">热风2016年冬季新款男鞋高帮休闲皮鞋舒适韩版平底鞋H13M6315</p>
-                        <p class="info">
-                            <span class="price">&yen;100.00</span>
-                            <span class="oldPrice">&yen;299.90</span>
-                            <span class="number">x1</span>
-                        </p>
-                        <p><span class="size">鞋码：42</span></p>
-                    </div>
-                    <input type="checkbox"/>
-                </a>
-            </li>
-            <li data-product="" class="mui-table-view-cell">
-                <div class="mui-slider-right mui-disabled">
-                    <a class="mui-btn mui-btn-blue">编辑</a>
-                    <a class="mui-btn mui-btn-red">删除</a>
-                </div>
-                <a href="javascript:;" class="mui-navigate-right mui-slider-handle">
-                    <img class="mui-media-object mui-pull-left" src="images/product.jpg">
-                    <div class="mui-media-body">
-                        <p class="name">热风2016年冬季新款男鞋高帮休闲皮鞋舒适韩版平底鞋H13M6315</p>
-                        <p class="info">
-                            <span class="price">&yen;100.00</span>
-                            <span class="oldPrice">&yen;299.90</span>
-                            <span class="number">x1</span>
-                        </p>
-                        <p><span class="size">鞋码：42</span></p>
-                    </div>
-                    <input type="checkbox"/>
-                </a>
-            </li>
-            <li data-product="" class="mui-table-view-cell">
-                <div class="mui-slider-right mui-disabled">
-                    <a class="mui-btn mui-btn-blue">编辑</a>
-                    <a class="mui-btn mui-btn-red">删除</a>
-                </div>
-                <a href="javascript:;" class="mui-navigate-right mui-slider-handle">
-                    <img class="mui-media-object mui-pull-left" src="images/product.jpg">
-                    <div class="mui-media-body">
-                        <p class="name">热风2016年冬季新款男鞋高帮休闲皮鞋舒适韩版平底鞋H13M6315</p>
-                        <p class="info">
-                            <span class="price">&yen;100.00</span>
-                            <span class="oldPrice">&yen;299.90</span>
-                            <span class="number">x1</span>
-                        </p>
-                        <p><span class="size">鞋码：42</span></p>
-                    </div>
-                    <input type="checkbox"/>
-                </a>
-            </li>
+        <ul class="mui-table-view mui-scroll" id="por_cart">
+            
         </ul>
         <div class="cart_order">订单总额：&yen;1022.00 <a href="#">生成订单</a></div>
     </div>
@@ -108,7 +33,32 @@
         <a class="tab_user fa fa-user" href="user/index.html"><span>会员中心</span></a>
     </footer>
 </div>
-<script src="res/mui/js/mui.min.js"></script>
+<script type="text/html" id="tpl">
+    {{each data val}}
+    <li data-product="" class="mui-table-view-cell">
+        <div class="mui-slider-right mui-disabled">
+            <a class="mui-btn mui-btn-blue">编辑</a>
+            <a class="mui-btn mui-btn-red">删除</a>
+        </div>
+        <a href="javascript:;" class="mui-navigate-right mui-slider-handle">
+            <img class="mui-media-object mui-pull-left" src="{{val.pic[0].picAddr}}">
+            <div class="mui-media-body">
+                <p class="name">{{val.proName}}</p>
+                <p class="info">
+                    <span class="price">&yen;{{val.price}}</span>
+                    <span class="oldPrice">&yen;{{val.oldPrice}}</span>
+                    <span class="number">x1</span>
+                </p>
+                <p><span class="size">鞋码：42</span></p>
+            </div>
+            <input type="checkbox"/>
+        </a>
+    </li>
+    {{/each}}
+</script>
+<script src="./js/jquery.min.js"></script>
+<script src="/res/mui/js/mui.min.js"></script>
+<script src="./js/template-web.js"></script>
 <script>
     mui(function(){
         mui.init();
@@ -145,6 +95,23 @@
             bounce: true, //是否启用回弹
         });
     });
+
+    //发送Ajax请求
+    $.ajax({
+        url: '/api/product/queryProduct',
+        type: 'get',
+        data: {
+            page: 1,
+            pageSize: 10
+        },
+        success: function (info) {
+            console.log(info);
+            //调用模板引擎
+            var html = template('tpl',info);
+            $('#por_cart').html(html);
+        }
+    })
+
 </script>
 </body>
 </html>
